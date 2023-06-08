@@ -33,7 +33,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>Main</mainClass>
+                  <mainClass>org.max.loom.Main</mainClass>
                 </transformer>
               </transformers>
             </configuration>
