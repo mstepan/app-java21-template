@@ -7,14 +7,19 @@
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
+        <!-- project properties -->
+        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <!-- dependencies -->
         <assertj.version>3.15.0</assertj.version>
-        <java.version>21</java.version>
-        <lmax.disruptor.version>3.4.4</lmax.disruptor.version>
+        <junit.bom.version>5.5.2</junit.bom.version>
         <mockito-version>2.21.0</mockito-version>
-        <surefire.plugin.version>3.0.0-M4</surefire.plugin.version>
+
+        <!-- maven plugins -->
+        <compiler.plugin.version>3.11.0</compiler.plugin.version>
         <shade.plugin.version>3.4.0</shade.plugin.version>
+        <surefire.plugin.version>3.0.0-M4</surefire.plugin.version>
     </properties>
 
     <build>
@@ -24,7 +29,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>${compiler.plugin.version}</version>
                 <configuration>
                     <release>${java.version}</release>
                     <compilerArgs>
@@ -35,6 +40,7 @@
                 </configuration>
             </plugin>
 
+            <!-- Surefire for unit tests  -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -44,6 +50,7 @@
                 </configuration>
             </plugin>
 
+            <!-- Shaded plugin for fat executebale JAR file -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -64,7 +71,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 
@@ -73,7 +79,7 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>5.5.2</version>
+                <version>${junit.bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

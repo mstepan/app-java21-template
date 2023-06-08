@@ -1,6 +1,4 @@
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadFactory;
 import jdk.incubator.concurrent.StructuredTaskScope;
 
 public class Main {
@@ -47,6 +45,10 @@ public class Main {
         System.out.printf("Main done... Java version used: %s\n", System.getProperty("java.version"));
     }
 
+    /**
+     * Custom implementation of 'StructuredTaskScope'.
+     * Main logic handled inside 'handleComplete' method.
+     */
     static class ShutdownOnValueInRange extends StructuredTaskScope<Integer> {
 
         final int from;
