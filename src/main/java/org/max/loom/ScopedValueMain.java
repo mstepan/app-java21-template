@@ -3,12 +3,11 @@ package org.max.loom;
 import jdk.incubator.concurrent.ScopedValue;
 import jdk.incubator.concurrent.StructuredTaskScope;
 
-import java.lang.invoke.MethodHandleInfo;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
-import java.util.concurrent.ExecutionException;
 
-public class Main {
+/** Provides ScopedValue (https://openjdk.org/jeps/429) usage examples. */
+public class ScopedValueMain {
 
     private static class SimpleCounter {
 
@@ -44,24 +43,34 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    private static final ScopedValue<SimpleCounter> SCOPED_COUNTER = ScopedValue.newInstance();
 
-        final SimpleCounter counter = new SimpleCounter();
+    public static void main(String[] args) {
 
         final int threadsCount = 10_000;
 
-        try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
-            for (int i = 0; i < threadsCount; ++i) {
-                scope.fork(counter::incrementAndGet);
-            }
-            scope.join();
-            scope.throwIfFailed(IllegalStateException::new);
-        }
+        ScopedValue.where(SCOPED_COUNTER, new SimpleCounter())
+                .run(
+                        () -> {
+                            try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+                                for (int i = 0; i < threadsCount; ++i) {
+                                    scope.fork(SCOPED_COUNTER.get()::incrementAndGet);
+                                }
 
-        System.out.printf("counter: %d\n", counter.get());
+                                try {
+                                    scope.join();
+                                    scope.throwIfFailed(IllegalStateException::new);
+                                } catch (InterruptedException interEx) {
+                                    Thread.currentThread().interrupt();
+                                }
+                            }
+
+                            System.out.printf("scoped counter: %d\n", SCOPED_COUNTER.get().get());
+                        });
 
         System.out.printf(
-                "Main done... Java version used: %s\n", System.getProperty("java.version"));
+                "ScopedValueMain done... Java version used: %s\n",
+                System.getProperty("java.version"));
     }
 
     private static long memoryUsed() {
