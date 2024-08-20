@@ -1,9 +1,7 @@
 package org.max.loom;
 
-import jdk.incubator.concurrent.StructuredTaskScope;
-
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.concurrent.StructuredTaskScope;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CustomStructuredTaskScopeMain {
@@ -55,17 +53,17 @@ public class CustomStructuredTaskScopeMain {
         private volatile Throwable ex;
 
         @Override
-        protected void handleComplete(Future<Integer> future) {
-            if (future.state() == Future.State.SUCCESS) {
+        protected void handleComplete(Subtask<? extends Integer> subtask) {
+            if (subtask.state() == Subtask.State.SUCCESS) {
 
-                final int curValue = future.resultNow();
+                final int curValue = subtask.get();
 
                 if (curValue >= from && curValue <= to) {
                     value = curValue;
                     shutdown();
                 }
-            } else if (future.state() == Future.State.FAILED) {
-                this.ex = future.exceptionNow();
+            } else if (subtask.state() == Subtask.State.FAILED) {
+                this.ex = subtask.exception();
             }
         }
 

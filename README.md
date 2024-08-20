@@ -1,7 +1,7 @@
 # java 21 template project
 
 Uses the following:
-* `Java 21` early access
+* [Java 21 LTS](https://bell-sw.com/pages/downloads/#jdk-21-lts) 
 * maven wrapper with `maven 3.6.3`
 
 ## Build & Run locally
@@ -14,8 +14,8 @@ Uses the following:
 ```bash
 ./run.sh
 ```
-Note: we can't exeucte jar file directly b/c some incubator and preview features should be enabled 
-using `--enable-preview --add-modules jdk.incubator.concurrent` JVM parameters.
+Note: we can't execute jar file directly b/c some incubator and preview features should be enabled 
+using `--enable-preview` JVM parameters.
 
 ## Unit tests.
 
